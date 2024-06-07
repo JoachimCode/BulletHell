@@ -50,10 +50,7 @@ public class PositionComp {
      * @param x the x position to be set
      * @since 0.0.1
      */
-    public void setX(int x) throws OutOfBoundsHorizontalException {
-        if(x < StaticConstants.minimumX || x > StaticConstants.maximumX) {
-            throw new OutOfBoundsHorizontalException("Entity has come out of bounds in x-axis");
-        }
+    public void setX(int x) {
         this.x = x;
     }
 
@@ -62,10 +59,7 @@ public class PositionComp {
      * @param y the y position to be set
      * @since 0.0.1
      */
-    public void setY(int y) throws OutOfBoundsVerticalException {
-        if(y < StaticConstants.minimumY || y > StaticConstants.maximumY) {
-            throw new OutOfBoundsVerticalException("Entity has come out of bounds in y-axis");
-        }
+    public void setY(int y) {
         this.y = y;
         }
 

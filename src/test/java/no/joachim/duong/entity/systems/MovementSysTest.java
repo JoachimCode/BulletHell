@@ -7,6 +7,8 @@ import no.joachim.duong.StaticConstants;
 import no.joachim.duong.entity.Entity;
 import no.joachim.duong.entity.components.PositionComp;
 import no.joachim.duong.entity.components.VelocityComp;
+import no.joachim.duong.exceptions.OutOfBoundsHorizontalException;
+import no.joachim.duong.exceptions.OutOfBoundsVerticalException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -42,7 +44,7 @@ class MovementSysTest {
     }
 
     @Test
-    void testUpdateNormal() {
+    void testUpdateNormal()  {
         movementSys.update(1);
         int actualPositionX = entityList.get(0).getComponent(PositionComp.class).getX();
         int actualPositionY = entityList.get(0).getComponent(PositionComp.class).getY();
@@ -50,6 +52,8 @@ class MovementSysTest {
         assertEquals(20, actualPositionY);
     }
 
+    /*
+    // Use this another place
     @Test
     void testUpdateHorizontalOutOfBounds() {
         movementSys.update(1);
@@ -94,4 +98,5 @@ class MovementSysTest {
         assertEquals(StaticConstants.maximumX - 70, actualPositionX2);
         assertEquals(StaticConstants.maximumY - 30, actualPositionY2);
     }
+     */
 }

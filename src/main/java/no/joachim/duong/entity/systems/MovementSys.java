@@ -34,40 +34,14 @@ public class MovementSys {
      * @param deltaTime amount of times its velocity will apply.
      * @since 0.0.1
      */
-    public void update(int deltaTime)
-        {
+    public void update(int deltaTime) {
         for(Entity entity : entityList) {
             PositionComp pos = entity.getComponent(PositionComp.class);
             VelocityComp vel = entity.getComponent(VelocityComp.class);
 
             if (pos != null && vel != null) {
-
-                try {
                     pos.setX((pos.getX() + vel.getVx()) * deltaTime);
-                }
-                catch (OutOfBoundsHorizontalException e) {
-                    try {
-                        pos.setX((StaticConstants.maximumX * 2) - (pos.getX() + (vel.getVx() * deltaTime)));
-                        vel.setVx(vel.getVx() * - 1);
-                    }
-                    catch (OutOfBoundsHorizontalException a) {
-                        System.out.println(a.getMessage());
-                    }
-                }
-
-                try {
                     pos.setY(pos.getY() + vel.getVy() * deltaTime);
-                }
-                catch (OutOfBoundsVerticalException e) {
-                    try {
-                        pos.setY((StaticConstants.maximumY * 2) - (pos.getY() + (vel.getVy() * deltaTime)));
-                        vel.setVy(vel.getVy() * -1);
-                    }
-                    catch (OutOfBoundsVerticalException a) {
-                        System.out.println(a.getMessage());
-                    }
-                }
-
             }
         }
     }

@@ -1,10 +1,14 @@
 package no.joachim.duong.exceptions;
 
 public class OutOfBoundsVerticalException extends Exception{
+    private int entityId;
     public OutOfBoundsVerticalException() {
         super();
     }
-
+    public OutOfBoundsVerticalException(int i) {
+        super();
+        entityId = i;
+    }
     public OutOfBoundsVerticalException(String message) {
         super(message);
     }
@@ -13,5 +17,9 @@ public class OutOfBoundsVerticalException extends Exception{
     }
     public OutOfBoundsVerticalException(Throwable cause) {
         super(cause);
+    }
+
+    public int getCollidedIt(){
+        return entityId;
     }
 }
