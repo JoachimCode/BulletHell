@@ -18,6 +18,8 @@ import java.util.Map;
  */
 public class Entity {
     private int id;
+    private int height;
+    private int width;
     /**
      * Map over the components. The key value is the component class and the
      * value is its instance.
@@ -51,6 +53,7 @@ public class Entity {
      *
      * @param componentClass Class of the component to be returned
      * @return the component object
+     * @since 0.0.1
      */
     public <T> T getComponent(Class<T> componentClass) {
         return componentClass.cast(components.get(componentClass));
@@ -59,8 +62,59 @@ public class Entity {
     /**
      *
      * @return the entities id
+     * @since 0.0.1
      */
     public int getId() {
         return id;
+    }
+
+    /**
+     *
+     * @return the height of the entity
+     * @since 0.0.1
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     *
+     * @return the width of the entity
+     * @since 0.0.1
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Sets the width to the entity
+     *
+     * @param width of the entity
+     * @throws IllegalArgumentException if the width set is negative
+     * @since 0.0.1
+     */
+    public void setWidth(int width) {
+        if(width < 0) {
+            throw new IllegalArgumentException("Width has to be positive");
+        }
+        else {
+            this.width = width;
+        }
+    }
+
+    /**
+     * Sets the height of the entity
+     *
+     * @param height of the entity
+     * @throws IllegalArgumentException if the height set is negative
+     * @since 0.0.1
+     */
+    public void setHeight(int height) {
+        if(height < 0) {
+            throw new IllegalArgumentException("Height has to be positive");
+        }
+        else {
+            this.height = height;
+        }
     }
 }

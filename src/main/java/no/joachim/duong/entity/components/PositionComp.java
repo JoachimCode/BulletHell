@@ -67,7 +67,7 @@ public class PositionComp {
             throw new OutOfBoundsVerticalException("Entity has come out of bounds in y-axis");
         }
         this.y = y;
-    }
+        }
 
     /**
      *
