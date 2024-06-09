@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 
 public class ImageLoader {
     public Image loadImageFromResources(String imagePath) {
-        URL imageURL = getClass().getResource("/images/" + imagePath);
+        URL imageURL = this.getClass().getResource("/images/" + imagePath);
 
         if (imageURL != null) {
             // Load the image from the URL

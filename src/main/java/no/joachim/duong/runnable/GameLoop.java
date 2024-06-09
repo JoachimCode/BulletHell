@@ -14,9 +14,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import no.joachim.duong.entity.components.VelocityComp;
 import no.joachim.duong.entity.systems.CollitionDetector;
 import no.joachim.duong.entity.systems.MovementSys;
 import no.joachim.duong.entity.units.Entity;
+import no.joachim.duong.entity.units.PlayerCharacter;
 import no.joachim.duong.utility.InputHandler;
 
 public class GameLoop {
@@ -29,19 +31,21 @@ public class GameLoop {
     private int levelId;
     private boolean isRunning;
     private Renderer imageRender;
-
     private ExecutorService executorService;
-    public GameLoop(Scene scene, int levelId) {
-        this.scene = scene;
-        currrentCanvas = getCanvasFromRoot(scene.getRoot());
-        this.levelId = levelId;
-    }
-
-    public GameLoop(Scene scene) {
+    private PlayerCharacter playerCharacter;
+    private Node root;
+    public GameLoop(Scene scene, PlayerCharacter playerCharacter) {
         this.scene = scene;
         currrentCanvas = getCanvasFromRoot(scene.getRoot());
         executorService = Executors.newSingleThreadExecutor();
         imageRender = new Renderer(currrentCanvas);
+        this.playerCharacter = playerCharacter;
+    }
+
+    public void setLevel(int levelId) {
+        LevelGenerator levelGenerator = new LevelGenerator();
+        entityList = levelGenerator.getLevelFromId(levelId, playerCharacter);
+        imageRender.setBackground(levelGenerator.getBackgroundName());
     }
 
     public void start() {
@@ -49,15 +53,22 @@ public class GameLoop {
             executorService.submit(this::gamePlay);
     }
 
+    public void stop() {
+        isRunning = false;
+        executorService.shutdown();
+    }
+
     public void gamePlay() {
+        MovementSys movementSys = new MovementSys(entityList);
         while (isRunning) {
             long startTime = System.currentTimeMillis();
 
             // Update game state
-            update();
+            movementSys.update(1);
+            inputUpdate();
 
             // Render the frame
-            imageRender.render();
+            imageRender.render(entityList);
 
             // Frame rate control
             long endTime = System.currentTimeMillis();
@@ -72,20 +83,52 @@ public class GameLoop {
 
     }
 
-    private void update() {
+    private void inputUpdate() {
         Set<KeyCode> activeKeys = InputHandler.getActiveKeys();
-        if (activeKeys.contains(KeyCode.W)) {
+        VelocityComp velocityComp = playerCharacter.getComponent(VelocityComp.class);
+        if(isDiagonal(activeKeys)) {
+            playerCharacter.setMovementSpeed(3);
+        }
+        else {
+            playerCharacter.setMovementSpeed(4);
+        }
 
+        if ((activeKeys.contains(KeyCode.W) && activeKeys.contains(KeyCode.S))
+            || (!activeKeys.contains(KeyCode.W) && !activeKeys.contains(KeyCode.S)))
+        {
+            velocityComp.setVy(0);
         }
-        if (activeKeys.contains(KeyCode.S)) {
-            // Move player down
+        else if (activeKeys.contains(KeyCode.W)) {
+            velocityComp.setVy(-playerCharacter.getMovementSpeed());
         }
-        if (activeKeys.contains(KeyCode.A)) {
-            imageRender.moveLeft();
+        else if (activeKeys.contains(KeyCode.S)) {
+            velocityComp.setVy(playerCharacter.getMovementSpeed());
         }
-        if (activeKeys.contains(KeyCode.D)) {
-            imageRender.moveRight();
+        if ((activeKeys.contains(KeyCode.D) && activeKeys.contains(KeyCode.A))
+            || (!activeKeys.contains(KeyCode.D) && !activeKeys.contains(KeyCode.A)))
+        {
+            velocityComp.setVx(0);
         }
+        else if (activeKeys.contains(KeyCode.D)) {
+            velocityComp.setVx(playerCharacter.getMovementSpeed());
+        }
+        else if (activeKeys.contains(KeyCode.A)) {
+            velocityComp.setVx(-playerCharacter.getMovementSpeed());
+        }
+    }
+
+    private boolean isDiagonal(Set<KeyCode> activeKeys) {
+        if(activeKeys.contains(KeyCode.A) && activeKeys.contains(KeyCode.S)) {
+            return true;
+        }
+        else if(activeKeys.contains(KeyCode.A) && activeKeys.contains(KeyCode.W)) {
+            return true;
+        }
+        else if(activeKeys.contains(KeyCode.D) && activeKeys.contains(KeyCode.W)) {
+            return true;
+        }
+        else
+            return activeKeys.contains(KeyCode.D) && activeKeys.contains(KeyCode.S);
     }
 
     private Canvas getCanvasFromRoot(Parent root) {

@@ -10,7 +10,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
 public class SceneHandler {
-    private Canvas currentCanvas;
     public Scene getGameplayScene() {
         Canvas canvas = new Canvas(600, 600);
         StackPane root = new StackPane();
@@ -30,7 +29,6 @@ public class SceneHandler {
             rootPane.getRowConstraints().add(rowConst);
         }
         Canvas canvas = new Canvas(600, 600);
-        currentCanvas = canvas;
         rootPane.add(canvas, 1, 1);
         return new Scene(rootPane, 800, 800);
     }

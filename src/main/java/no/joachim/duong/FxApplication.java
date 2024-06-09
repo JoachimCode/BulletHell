@@ -46,16 +46,21 @@ public class FxApplication extends Application{
         Scene mainScene = sceneHandler.getGameplayScene();
         inputExecutor = Executors.newSingleThreadExecutor();
         InputHandler inputHandler = new InputHandler(mainScene, inputExecutor);
-        GameLoop gameLoop = new GameLoop(mainScene);
+        createPlayerCharacter();
+        GameLoop gameLoop = new GameLoop(mainScene, playerCharacter);
+        gameLoop.setLevel(1);
         gameLoop.start();
+
+
         stage.setTitle("BulletHell");
         stage.setScene(mainScene);
         stage.show();
     }
 
     private void createPlayerCharacter() {
-        playerCharacter = new PlayerCharacter(nextId.getAndIncrement());
+        playerCharacter = new PlayerCharacter(nextId.getAndIncrement(), 40, 80);
         playerCharacter.addComponent(new PositionComp(0, 0));
-        playerCharacter.addComponent(new VelocityComp(15, 15));
+        playerCharacter.addComponent(new VelocityComp(0, 0));
+        playerCharacter.setSprite("PlayerSprite.png");
     }
 }
