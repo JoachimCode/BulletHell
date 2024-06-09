@@ -42,6 +42,10 @@ public class FxApplication extends Application{
         launch(args);
     }
     private void startGameplay(Stage stage) {
+        stage.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
+
         SceneHandler sceneHandler = new SceneHandler();
         Scene mainScene = sceneHandler.getGameplayScene();
         inputExecutor = Executors.newSingleThreadExecutor();
@@ -52,13 +56,15 @@ public class FxApplication extends Application{
         gameLoop.start();
 
 
+
+
         stage.setTitle("BulletHell");
         stage.setScene(mainScene);
         stage.show();
     }
 
     private void createPlayerCharacter() {
-        playerCharacter = new PlayerCharacter(nextId.getAndIncrement(), 40, 80);
+        playerCharacter = new PlayerCharacter(nextId.getAndIncrement(), 40, 80, StaticConstants.PLAYERCHARACTER);
         playerCharacter.addComponent(new PositionComp(0, 0));
         playerCharacter.addComponent(new VelocityComp(0, 0));
         playerCharacter.setSprite("PlayerSprite.png");

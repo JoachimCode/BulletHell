@@ -23,6 +23,7 @@ public abstract class Entity {
     private int height;
     private int width;
     private Image sprite;
+    private int type;
     /**
      * Map over the components. The key value is the component class and the
      * value is its instance.
@@ -47,10 +48,11 @@ public abstract class Entity {
      * @param height of the entity
      * @since 0.0.1
      */
-    protected Entity(int id, int width, int height) {
+    protected Entity(int id, int width, int height, int type) {
         this.id = id;
         this.width = width;
         this.height = height;
+        this.type = type;
     }
 
     /**
@@ -145,5 +147,9 @@ public abstract class Entity {
 
     public Image getSprite() {
         return sprite;
+    }
+
+    public int getType() {
+        return type;
     }
 }

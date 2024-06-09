@@ -8,13 +8,14 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import no.joachim.duong.utility.StaticConstants;
 
 public class SceneHandler {
     public Scene getGameplayScene() {
-        Canvas canvas = new Canvas(600, 600);
+        Canvas canvas = new Canvas(StaticConstants.maximumX, StaticConstants.maximumY);
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
-        return new Scene(root, 600, 600);
+        return new Scene(root, StaticConstants.maximumX, StaticConstants.maximumY);
     }
 
     public Scene getDialogueScene() {

@@ -1,5 +1,7 @@
 package no.joachim.duong.runnable;
 
+import java.security.Key;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +22,7 @@ import no.joachim.duong.entity.systems.MovementSys;
 import no.joachim.duong.entity.units.Entity;
 import no.joachim.duong.entity.units.PlayerCharacter;
 import no.joachim.duong.utility.InputHandler;
+import no.joachim.duong.utility.StaticConstants;
 
 public class GameLoop {
     private Canvas currrentCanvas;
@@ -40,6 +43,7 @@ public class GameLoop {
         executorService = Executors.newSingleThreadExecutor();
         imageRender = new Renderer(currrentCanvas);
         this.playerCharacter = playerCharacter;
+
     }
 
     public void setLevel(int levelId) {
@@ -60,7 +64,9 @@ public class GameLoop {
 
     public void gamePlay() {
         MovementSys movementSys = new MovementSys(entityList);
+        collitionDetector = new CollitionDetector(entityList);
         while (isRunning) {
+            System.out.println(entityList.size());
             long startTime = System.currentTimeMillis();
 
             // Update game state
@@ -69,6 +75,8 @@ public class GameLoop {
 
             // Render the frame
             imageRender.render(entityList);
+
+            removeOutOfBoundsBullets(entityList);
 
             // Frame rate control
             long endTime = System.currentTimeMillis();
@@ -86,22 +94,25 @@ public class GameLoop {
     private void inputUpdate() {
         Set<KeyCode> activeKeys = InputHandler.getActiveKeys();
         VelocityComp velocityComp = playerCharacter.getComponent(VelocityComp.class);
+        /*
         if(isDiagonal(activeKeys)) {
             playerCharacter.setMovementSpeed(3);
         }
         else {
             playerCharacter.setMovementSpeed(4);
         }
-
+        */
+        velocityComp.setVy(0);
+        velocityComp.setVx(0);
         if ((activeKeys.contains(KeyCode.W) && activeKeys.contains(KeyCode.S))
             || (!activeKeys.contains(KeyCode.W) && !activeKeys.contains(KeyCode.S)))
         {
             velocityComp.setVy(0);
         }
-        else if (activeKeys.contains(KeyCode.W)) {
+        else if (activeKeys.contains(KeyCode.W) && !collitionDetector.isCollidedWithWallTop(playerCharacter)) {
             velocityComp.setVy(-playerCharacter.getMovementSpeed());
         }
-        else if (activeKeys.contains(KeyCode.S)) {
+        else if (activeKeys.contains(KeyCode.S) && !collitionDetector.isCollidedWithWallBottom(playerCharacter)) {
             velocityComp.setVy(playerCharacter.getMovementSpeed());
         }
         if ((activeKeys.contains(KeyCode.D) && activeKeys.contains(KeyCode.A))
@@ -109,11 +120,31 @@ public class GameLoop {
         {
             velocityComp.setVx(0);
         }
-        else if (activeKeys.contains(KeyCode.D)) {
+        else if (activeKeys.contains(KeyCode.D) && !collitionDetector.isCollidedWithWallRight(playerCharacter)) {
             velocityComp.setVx(playerCharacter.getMovementSpeed());
         }
-        else if (activeKeys.contains(KeyCode.A)) {
+        else if (activeKeys.contains(KeyCode.A) && !collitionDetector.isCollidedWithWallLeft(playerCharacter)) {
             velocityComp.setVx(-playerCharacter.getMovementSpeed());
+        }
+
+        if(activeKeys.contains(KeyCode.RIGHT) && playerCharacter.getCooldown() == 0) {
+            entityList.add(playerCharacter.createBullet(1));
+            playerCharacter.setCooldown(playerCharacter.getMaxCooldown());
+        }
+        else if(activeKeys.contains(KeyCode.DOWN) && playerCharacter.getCooldown() == 0) {
+            entityList.add(playerCharacter.createBullet(2));
+            playerCharacter.setCooldown(playerCharacter.getMaxCooldown());
+        }
+        else if(activeKeys.contains(KeyCode.LEFT) && playerCharacter.getCooldown() == 0) {
+            entityList.add(playerCharacter.createBullet(3));
+            playerCharacter.setCooldown(playerCharacter.getMaxCooldown());
+        }
+        else if(activeKeys.contains(KeyCode.UP) && playerCharacter.getCooldown() == 0) {
+            entityList.add(playerCharacter.createBullet(4));
+            playerCharacter.setCooldown(playerCharacter.getMaxCooldown());
+        }
+        else {
+            playerCharacter.decreaseCooldown();
         }
     }
 
@@ -143,6 +174,12 @@ public class GameLoop {
             }
         }
         return null;
+    }
+
+    private void removeOutOfBoundsBullets(List<Entity> entityList) {
+        entityList.removeIf(currentEntity -> currentEntity.getType() == StaticConstants.BULLET
+            && collitionDetector.isCollidedWithWall(currentEntity));
+
     }
 
 }

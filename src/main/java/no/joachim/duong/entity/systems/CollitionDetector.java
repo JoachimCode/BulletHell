@@ -1,6 +1,7 @@
 package no.joachim.duong.entity.systems;
 
 import java.util.ArrayList;
+import java.util.List;
 import no.joachim.duong.utility.StaticConstants;
 import no.joachim.duong.entity.units.Entity;
 import no.joachim.duong.entity.components.PositionComp;
@@ -19,8 +20,8 @@ import no.joachim.duong.entity.components.PositionComp;
  * @author Joachim Duong
  */
 public class CollitionDetector {
-    private ArrayList<Entity> entityList;
-    public CollitionDetector(ArrayList<Entity> entityList) {
+    private List<Entity> entityList;
+    public CollitionDetector(List<Entity> entityList) {
         this.entityList = entityList;
     }
 
@@ -32,7 +33,7 @@ public class CollitionDetector {
      * @return a ArrayList of all the collisions that have occurred.
      * @since 0.0.1
      */
-    public ArrayList<Entity[]> getCollisions() {
+    public List<Entity[]> getCollisions() {
         ArrayList<Entity[]> collidedEntities = new ArrayList<>();
         for(int i = 0; i < entityList.size(); i++) {
             for(int j = 0; j <entityList.size(); j++) {
@@ -89,12 +90,40 @@ public class CollitionDetector {
         int startX = entity.getComponent(PositionComp.class).getX();
         int endX = startX + entity.getWidth();
         int startY = entity.getComponent(PositionComp.class).getY();
-        int endY = startY - entity.getHeight();
+        int endY = startY + entity.getHeight();
 
 
-        boolean xOverlap = startX < StaticConstants.minimumX && endX > StaticConstants.maximumX;
-        boolean yOverlap = startY < StaticConstants.minimumY && endY > StaticConstants.maximumY;
+        boolean xOverlap = startX < StaticConstants.minimumX || endX > StaticConstants.maximumX;
+        boolean yOverlap = startY < StaticConstants.minimumY || endY > StaticConstants.maximumY;
 
-        return xOverlap && yOverlap;
+        return xOverlap || yOverlap;
+    }
+
+    public boolean isCollidedWithWallRight(Entity entity) {
+        int startX = entity.getComponent(PositionComp.class).getX();
+        int endX = startX + entity.getWidth();
+        boolean xOverlap = endX > StaticConstants.maximumX;
+
+        return xOverlap;
+    }
+
+    public boolean isCollidedWithWallLeft(Entity entity) {
+        int startX = entity.getComponent(PositionComp.class).getX();
+        boolean xOverlap = startX < StaticConstants.minimumX;
+
+        return xOverlap;
+    }
+    public boolean isCollidedWithWallTop(Entity entity) {
+        int startY = entity.getComponent(PositionComp.class).getY();
+        boolean yOverlap = startY < StaticConstants.minimumY;
+
+        return yOverlap;
+    }
+    public boolean isCollidedWithWallBottom(Entity entity) {
+        int startY = entity.getComponent(PositionComp.class).getY();
+        int endY = startY + entity.getHeight();
+        boolean yOverlap = endY > StaticConstants.maximumY;
+
+        return yOverlap;
     }
 }
