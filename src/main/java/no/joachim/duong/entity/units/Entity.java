@@ -1,7 +1,9 @@
-package no.joachim.duong.entity;
+package no.joachim.duong.entity.units;
 
 import java.util.HashMap;
 import java.util.Map;
+import javafx.scene.image.Image;
+import no.joachim.duong.utility.ImageLoader;
 
 /**
  * <p>
@@ -16,10 +18,11 @@ import java.util.Map;
  * @since 0.0.1
  * @author Joachim Duong
  */
-public class Entity {
+public abstract class Entity {
     private int id;
     private int height;
     private int width;
+    private Image sprite;
     /**
      * Map over the components. The key value is the component class and the
      * value is its instance.
@@ -32,8 +35,22 @@ public class Entity {
      * @param id the entity ID for identifying different entities.
      * @since 0.0.1
      */
-    public Entity(int id) {
+    protected Entity(int id) {
         this.id = id;
+    }
+
+    /**
+     * Constructor for the entity with predefined width and height
+     *
+     * @param id to the entity
+     * @param width of the entity
+     * @param height of the entity
+     * @since 0.0.1
+     */
+    protected Entity(int id, int width, int height) {
+        this.id = id;
+        this.width = width;
+        this.height = height;
     }
 
     /**
@@ -116,5 +133,17 @@ public class Entity {
         else {
             this.height = height;
         }
+    }
+
+    public void setSprite(String imageName) {
+        ImageLoader imageLoader = new ImageLoader();
+        sprite = imageLoader.loadImageFromResources(imageName);
+        if(sprite == null) {
+            throw new IllegalArgumentException("No sprite named that");
+        }
+    }
+
+    public Image getSprite() {
+        return sprite;
     }
 }

@@ -1,9 +1,5 @@
 package no.joachim.duong.entity.components;
 
-import no.joachim.duong.StaticConstants;
-import no.joachim.duong.exceptions.OutOfBoundsHorizontalException;
-import no.joachim.duong.exceptions.OutOfBoundsVerticalException;
-
 /**
  * <p>
  * Represents a components class for postion of the entity.

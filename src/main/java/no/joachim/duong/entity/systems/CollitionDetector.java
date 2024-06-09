@@ -1,8 +1,8 @@
 package no.joachim.duong.entity.systems;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import no.joachim.duong.entity.Entity;
+import no.joachim.duong.utility.StaticConstants;
+import no.joachim.duong.entity.units.Entity;
 import no.joachim.duong.entity.components.PositionComp;
 
 /**
@@ -83,5 +83,18 @@ public class CollitionDetector {
      */
     public boolean checkIfSameId(Entity i, Entity j) {
         return i.getId() == j.getId();
+    }
+
+    public boolean isCollidedWithWall(Entity entity) {
+        int startX = entity.getComponent(PositionComp.class).getX();
+        int endX = startX + entity.getWidth();
+        int startY = entity.getComponent(PositionComp.class).getY();
+        int endY = startY - entity.getHeight();
+
+
+        boolean xOverlap = startX < StaticConstants.minimumX && endX > StaticConstants.maximumX;
+        boolean yOverlap = startY < StaticConstants.minimumY && endY > StaticConstants.maximumY;
+
+        return xOverlap && yOverlap;
     }
 }

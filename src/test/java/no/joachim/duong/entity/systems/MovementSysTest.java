@@ -3,12 +3,11 @@ package no.joachim.duong.entity.systems;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import no.joachim.duong.StaticConstants;
-import no.joachim.duong.entity.Entity;
+import no.joachim.duong.utility.StaticConstants;
+import no.joachim.duong.entity.units.Entity;
 import no.joachim.duong.entity.components.PositionComp;
 import no.joachim.duong.entity.components.VelocityComp;
-import no.joachim.duong.exceptions.OutOfBoundsHorizontalException;
-import no.joachim.duong.exceptions.OutOfBoundsVerticalException;
+import no.joachim.duong.entity.units.Npc;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -18,19 +17,19 @@ class MovementSysTest {
 
     @BeforeEach
     void setUp() {
-        Entity entity1 = new Entity(1);
+        Entity entity1 = new Npc(1);
         entity1.addComponent(new PositionComp(20, 20));
         entity1.addComponent(new VelocityComp(5, 0));
 
-        Entity entity2 = new Entity(2);
+        Entity entity2 = new Npc(2);
         entity2.addComponent(new PositionComp(StaticConstants.maximumX - 10, 0));
         entity2.addComponent(new VelocityComp(20, 20));
 
-        Entity entity3 = new Entity(3);
+        Entity entity3 = new Npc(3);
         entity3.addComponent(new PositionComp(0, StaticConstants.maximumY - 10));
         entity3.addComponent(new VelocityComp(20, 20));
 
-        Entity entity4 = new Entity(4);
+        Entity entity4 = new Npc(4);
         entity4.addComponent(new PositionComp(StaticConstants.maximumX - 10, StaticConstants.maximumY - 10));
         entity4.addComponent(new VelocityComp(40, 20));
 

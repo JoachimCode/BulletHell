@@ -1,4 +1,4 @@
-package no.joachim.duong;
+package no.joachim.duong.utility;
 
 public class StaticConstants {
     public static final int maximumX = 800;
