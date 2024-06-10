@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import javafx.application.Application;
 import no.joachim.duong.entity.components.PositionComp;
 import no.joachim.duong.entity.components.VelocityComp;
+import no.joachim.duong.entity.components.attacks.PlayerAttack;
 import no.joachim.duong.entity.units.PlayerCharacter;
 import no.joachim.duong.runnable.GameLoop;
 import no.joachim.duong.scenes.SceneHandler;
@@ -67,6 +68,7 @@ public class FxApplication extends Application{
         playerCharacter = new PlayerCharacter(nextId.getAndIncrement(), 40, 80, StaticConstants.PLAYERCHARACTER);
         playerCharacter.addComponent(new PositionComp(0, 0));
         playerCharacter.addComponent(new VelocityComp(0, 0));
+        playerCharacter.addComponent(new PlayerAttack());
         playerCharacter.setSprite("PlayerSprite.png");
     }
 }

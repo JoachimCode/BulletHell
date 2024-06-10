@@ -17,6 +17,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import no.joachim.duong.entity.components.VelocityComp;
+import no.joachim.duong.entity.components.attacks.PlayerAttack;
 import no.joachim.duong.entity.systems.CollitionDetector;
 import no.joachim.duong.entity.systems.MovementSys;
 import no.joachim.duong.entity.units.Entity;
@@ -66,7 +67,6 @@ public class GameLoop {
         MovementSys movementSys = new MovementSys(entityList);
         collitionDetector = new CollitionDetector(entityList);
         while (isRunning) {
-            System.out.println(entityList.size());
             long startTime = System.currentTimeMillis();
 
             // Update game state
@@ -94,6 +94,8 @@ public class GameLoop {
     private void inputUpdate() {
         Set<KeyCode> activeKeys = InputHandler.getActiveKeys();
         VelocityComp velocityComp = playerCharacter.getComponent(VelocityComp.class);
+        PlayerAttack playerAttack = playerCharacter.getComponent(PlayerAttack.class);
+        playerAttack.setActive(false);
         /*
         if(isDiagonal(activeKeys)) {
             playerCharacter.setMovementSpeed(3);
@@ -127,25 +129,24 @@ public class GameLoop {
             velocityComp.setVx(-playerCharacter.getMovementSpeed());
         }
 
-        if(activeKeys.contains(KeyCode.RIGHT) && playerCharacter.getCooldown() == 0) {
-            entityList.add(playerCharacter.createBullet(1));
-            playerCharacter.setCooldown(playerCharacter.getMaxCooldown());
+        if(activeKeys.contains(KeyCode.RIGHT)) {
+            playerAttack.setActive(true);
+            playerAttack.setDirection(1);
         }
-        else if(activeKeys.contains(KeyCode.DOWN) && playerCharacter.getCooldown() == 0) {
-            entityList.add(playerCharacter.createBullet(2));
-            playerCharacter.setCooldown(playerCharacter.getMaxCooldown());
+        else if(activeKeys.contains(KeyCode.DOWN)) {
+            playerAttack.setActive(true);
+            playerAttack.setDirection(1);
         }
-        else if(activeKeys.contains(KeyCode.LEFT) && playerCharacter.getCooldown() == 0) {
-            entityList.add(playerCharacter.createBullet(3));
-            playerCharacter.setCooldown(playerCharacter.getMaxCooldown());
+        else if(activeKeys.contains(KeyCode.LEFT)) {
+            playerAttack.setActive(true);
+            playerAttack.setDirection(1);
+
         }
-        else if(activeKeys.contains(KeyCode.UP) && playerCharacter.getCooldown() == 0) {
-            entityList.add(playerCharacter.createBullet(4));
-            playerCharacter.setCooldown(playerCharacter.getMaxCooldown());
+        else if(activeKeys.contains(KeyCode.UP)) {
+            playerAttack.setActive(true);
+            playerAttack.setDirection(1);
         }
-        else {
-            playerCharacter.decreaseCooldown();
-        }
+
     }
 
     private boolean isDiagonal(Set<KeyCode> activeKeys) {
@@ -177,7 +178,7 @@ public class GameLoop {
     }
 
     private void removeOutOfBoundsBullets(List<Entity> entityList) {
-        entityList.removeIf(currentEntity -> currentEntity.getType() == StaticConstants.BULLET
+        entityList.removeIf(currentEntity -> (currentEntity.getType() == StaticConstants.PLAYER_BULLET || currentEntity.getType() == StaticConstants.ENEMY_BULLET)
             && collitionDetector.isCollidedWithWall(currentEntity));
 
     }
